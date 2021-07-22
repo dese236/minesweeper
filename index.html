@@ -7,17 +7,24 @@
 </head>
 
 <body onload="initGame()">
-    <div class="open-screen">
+    <div class="top-screen">
         <div class="life"></div>
-        <div class="hint"></div>
+        <button class="hint hint1" data-i="1" onclick="clickHint(this)"></button>
+        <button class="hint hint2" data-i="2" onclick="clickHint(this)"></button>
+        <button class="hint hint3" data-i="3" onclick="clickHint(this)"></button>
+        <button class="safe safe1" data-i="1" onclick="clickSafe(this)"></button>
+        <button class="safe safe2" data-i="2" onclick="clickSafe(this)"></button>
+        <button class="safe safe3" data-i="3" onclick="clickSafe(this)"></button>
+        <button class="undo" onclick="undoLastMove()"></button>
+        <button class="manually" onclick="setManually()"></button>
         <div class="check-box">
-            <header>choose board size</header>
+            <header>Choose Level</header>
             <input class="selection" onclick="setBoardSize(this)" type="radio" name="4" id="4">
-            <label for="4">4</label>
+            <label for="4">Easy</label>
             <input class="selection" onclick="setBoardSize(this)" type="radio" name="8" id="8">
-            <label for="8">8</label>
+            <label for="8">Medium</label>
             <input class="selection" onclick="setBoardSize(this)" type="radio" name="12" id="12">
-            <label for="12">12</label>
+            <label for="12">Hard</label>
         </div>
     </div>
     <div class="info">
