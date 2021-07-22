@@ -1,0 +1,37 @@
+<!-- <!DOCTYPE html> -->
+<html>
+
+<head>
+    <title>Minesweeper</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body onload="initGame()">
+    <div class="open-screen">
+        <div class="life"></div>
+        <div class="hint"></div>
+        <div class="check-box">
+            <header>choose board size</header>
+            <input class="selection" onclick="setBoardSize(this)" type="radio" name="4" id="4">
+            <label for="4">4</label>
+            <input class="selection" onclick="setBoardSize(this)" type="radio" name="8" id="8">
+            <label for="8">8</label>
+            <input class="selection" onclick="setBoardSize(this)" type="radio" name="12" id="12">
+            <label for="12">12</label>
+        </div>
+    </div>
+    <div class="info">
+        <div class="timer">00:00</div>
+        <button onclick="initGame()" class="start-game"></button>
+        <div class="flags"></div>
+    </div>
+    <!-- <div class="board-container">
+    </div> -->
+    <table></table>
+    <footer>Dese Bezunech</footer>
+    <!-- <div class="place">Dese Bezunech</div> -->
+    <script src="js/main.js"></script>
+    <script src="js/util.js"></script>
+</body>
+
+</html>
