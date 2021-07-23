@@ -4,7 +4,8 @@
 }
 body{
     background-color: rgb(255, 245, 110);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 .top-screen{
@@ -79,7 +80,7 @@ body{
 .info{
     width:50%;
     height: 80px;
-    background-color: rgb(124, 121, 121);
+    background:  linear-gradient(to bottom, #b5bbb9 5%, #6e6c6c 100%);
     border-radius: 5px;
     border: 5px medium rgb(207, 198, 198);
     margin-top: 20px;
@@ -324,7 +325,7 @@ body{
 table{
     width:50%;
     height: 350px;
-    background-color: indigo;
+    background-color: #33322a;
     position: absolute;
     top : 180px ;
     left: 20%;
@@ -341,10 +342,11 @@ tbody{
 td{
     width: 25px;
     height: 25px;
-    border-style: double;
-    border:1px solid black;
+    /* border-style: double; */
+    border:1px solid rgba(156, 149, 141,0.53black);
     text-align: center;
-    background-color: rgb(255, 172, 112);
+    /* background-color:  */
+   background:  linear-gradient(to bottom, #b5bbb9 5%, #6e6c6c 100%);
     font-size: 18px;
     transition: 0.5s;
 }
@@ -359,6 +361,39 @@ td{
     padding: 2px;
 
 } */
+
+.msg {
+    width: 200px;
+    height: 150px;
+	box-shadow:inset 0px 1px 12px 1px #91b8b3;
+	background-image: url(../images/oops.jpg);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+	border-radius:5px;
+	border:1px solid #566963;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	/* padding:10px 20px; */
+	text-shadow:0px -1px 0px #2b665e;
+    position: absolute;
+    right: 10%;
+    top:55%;
+    visibility: hidden;
+    
+}
+.msg.win{
+    background-image: url(../images/win.jfif)
+}
+.msg.lose{
+    background-image: url(../images/lose.jpg)
+}
+.msg img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+} 
 
 footer{
     background-color: #c5cac2;

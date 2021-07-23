@@ -1,7 +1,5 @@
 'use strict'
 
-
-
 const EMPTY = '';
 const MINE = '💣';
 const FLAG = '🚩';
@@ -44,11 +42,28 @@ var gBestScore;
 var gOrderedClicks = [];
 var gIsManually = false;
 var gMineInserted = 0;
-var gManuallyInterval ;
+var gManuallyInterval;
 
-
-function initGame() {
+function initVars() {
+    // gBoardSize = 4
+    // gMinesNum = 2;
+    gEmptyCellsNum = gBoardSize ** 2 - gMinesNum
+    // gRemaindFlagNum = 2
+    // gLivesNum = 2;
+    gOrderedClicks = [];
+    gIsManually = false;
+    gMineInserted = 0;
+    gManuallyInterval;
     var gGame = {
+        isOn: false,
+        shownCount: 0,
+        markedCount: 0,
+        explodedCount: 0,
+        secsPassed: 0
+    }
+}
+function initGame() {
+    gGame = {
         isOn: false,
         shownCount: 0,
         markedCount: 0,
@@ -58,7 +73,8 @@ function initGame() {
     document.querySelector('.start-game').innerHTML = NORMAL
     document.querySelector('.life').innerHTML = LIFE + 'x ' + gLivesNum
     document.querySelector('.flags').innerHTML = FLAG + 'x ' + gRemaindFlagNum
-
+    document.querySelector('.msg').style.visibility = 'hidden'
+    initVars()
     gBoard = createboard(gBoardSize, gBoardSize)
     renderBoard(gBoard)
     console.log(gBoard);
@@ -146,14 +162,14 @@ function preventContextMenu() {
 function cellClicked(elCell, i, j) {
     if (gIsManually) {
         if (gMineInserted < gMinesNum) {
-        gBoard[i][j].isMine = true
-        gMineInserted++
-        return
+            gBoard[i][j].isMine = true
+            gMineInserted++
+            return
         }
-            startManaully()
-            gIsManually = false
-            gGame.isOn = true;
-            gIsFirstClick = false
+        startManaully()
+        gIsManually = false
+        gGame.isOn = true;
+        gIsFirstClick = false
     }
     if (gIsFirstClick) {
         gGame.isOn = true;
@@ -183,7 +199,14 @@ function handleMine(elCell) {
     elCell.style.background = 'red'
     gLivesNum--
     document.querySelector('.life').innerHTML = LIFE + 'x ' + gLivesNum
-    if (!gLivesNum) return endGame()
+    if (!gLivesNum) {
+        endGame()
+        return
+    }
+    document.querySelector('.msg').style.visibility = 'visible'
+    setTimeout(function () {
+        document.querySelector('.msg').style.visibility = 'hidden'
+    }, 1000)
     // document.querySelector('mine-msg').style.visibility = 'visible'
 }
 
@@ -233,7 +256,7 @@ function isHint(elCell) {
     elMarkedHint.style.visibility = 'hidden'
     elMarkedHint.classList.remove('marked')
     // elMarkedHint.classList.add('used')
-    setTimeout(revelNeg, 0, elCell, true)
+    revelNeg(elCell, true)
     setTimeout(revelNeg, 1000, elCell, false)
     return true
 }
@@ -256,6 +279,7 @@ function revelNeg(elCell, isRevel) {
             if (isRevel) {
                 elNeg.innerHTML = gBoard[i][j].isMine ? MINE : gBoard[i][j].minesAroundCount
             } else {
+                if (gBoard[i][j].isShown) continue
                 elNeg.innerHTML = EMPTY;
             }
         }
@@ -317,10 +341,10 @@ function undoLastMove() {
 function setManually() {
     if (gGame.isOn) return
     gIsManually = gIsManually ? false : true
-    gManuallyInterval = setInterval(toggleManually , 1000)
+    gManuallyInterval = setInterval(toggleManually, 1000)
 }
 
-function toggleManually(){
+function toggleManually() {
     var elManually = document.querySelector('.manually')
     elManually.classList.toggle('clicked')
 }
@@ -432,10 +456,11 @@ function isVictory() {
 
 
 function endGame() {
+    gGame.isOn = false
     clearInterval(gTimerInterval)
     revelMines()
+    renderMsg('lose')
     document.querySelector('.start-game').innerHTML = LOSE
-    gGame.isOn = false
 }
 
 function revelMines() {
@@ -446,12 +471,23 @@ function revelMines() {
         if (gBoard[rowIdx][rowIdx].isShown || !gBoard[rowIdx][colIdx].isMine) continue
         elCells[i].innerHTML = MINE
         gBoard[rowIdx][colIdx].isShown = true
-        // if(gBoard[i][j].isMarked) elCells[k].innerHTML += 'X'
+        
     }
 }
 
 function gameDone() {
     clearInterval(gTimerInterval)
+    renderMsg('win')
     document.querySelector('.start-game').innerHTML = WIN
     gGame.isOn = false
+}
+
+function renderMsg(str) {
+    var elMsg = document.querySelector('.msg')
+    elMsg.classList.toggle(str)
+    elMsg.style.visibility = 'visible'
+    setTimeout(function () {
+        elMsg.classList.toggle(str)
+        elMsg.style.visibility = 'hidden'
+    }, 1000)
 }
