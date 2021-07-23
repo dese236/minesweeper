@@ -13,7 +13,6 @@ var gGame = {
     isOn: false,
     shownCount: 0,
     markedCount: 0,
-    explodedCount: 0,
     secsPassed: 0
 }
 var gBoard;
@@ -45,11 +44,11 @@ var gMineInserted = 0;
 var gManuallyInterval;
 
 function initVars() {
-    // gBoardSize = 4
-    // gMinesNum = 2;
+    gBoardSize = 4
+    gMinesNum = 2;
     gEmptyCellsNum = gBoardSize ** 2 - gMinesNum
-    // gRemaindFlagNum = 2
-    // gLivesNum = 2;
+    gRemaindFlagNum = 2
+    gLivesNum = 2;
     gOrderedClicks = [];
     gIsManually = false;
     gMineInserted = 0;
@@ -67,17 +66,16 @@ function initGame() {
         isOn: false,
         shownCount: 0,
         markedCount: 0,
-        explodedCount: 0,
         secsPassed: 0
     }
+    // initVars()
     document.querySelector('.start-game').innerHTML = NORMAL
     document.querySelector('.life').innerHTML = LIFE + 'x ' + gLivesNum
     document.querySelector('.flags').innerHTML = FLAG + 'x ' + gRemaindFlagNum
+    document.querySelector('.timer').innerHTML = '00:00'
     document.querySelector('.msg').style.visibility = 'hidden'
-    initVars()
     gBoard = createboard(gBoardSize, gBoardSize)
     renderBoard(gBoard)
-    console.log(gBoard);
     preventContextMenu()
     gIsFirstClick = true;
 
@@ -92,11 +90,11 @@ function setBoardSize(elCheckBox) {
             elCheckBoxes[i].checked = false
         }
     }
+    upDateVars(gBoardSize)
     initGame()
-    upDateMinesNum(gBoardSize)
 }
 
-function upDateMinesNum(num) {
+function upDateVars(num) {
     switch (num) {
         case 4:
             gRemaindFlagNum = 2
@@ -195,10 +193,16 @@ function cellClicked(elCell, i, j) {
 }
 
 function handleMine(elCell) {
-    gGame.explodedCount++
+    var i = +elCell.dataset.i
+    var j = +elCell.dataset.j
+    var cell = gBoard[i][j]
+    cell.isShown = true
+    // gGame.explodedCount
     elCell.style.background = 'red'
     gLivesNum--
+    gRemaindFlagNum--
     document.querySelector('.life').innerHTML = LIFE + 'x ' + gLivesNum
+    document.querySelector('.flags').innerHTML = FLAG + 'x ' + gRemaindFlagNum
     if (!gLivesNum) {
         endGame()
         return
@@ -293,7 +297,7 @@ function clickSafe(elBtn) {
     var cell = releventCells[idx]
     var elCell = document.querySelector(`.cell${cell.i}-${cell.j}`)
     elCell.innerHTML = gBoard[cell.i][cell.j].minesAroundCount
-    setTimeout(function () { elCell.innerHTML = EMPTY }, 2500)
+    setTimeout(function () { elCell.innerHTML = EMPTY }, 2000)
     elBtn.style.visibility = 'hidden'
 }
 
@@ -318,12 +322,11 @@ function undoLastMove() {
         var elCurrCell = document.querySelector(`.cell${i}-${j}`)
         console.log(elCurrCell);
         elCurrCell.innerHTML = EMPTY;
+        gGame.shownCount--
         gOrderedClicks.splice(gOrderedClicks.length - 1)
         if (gBoard[i][j].isMine) elCurrCell.style.background = ''
         return
     }
-    console.log('this is order ' + gOrderedClicks);
-    console.log('this is the last cell ' + lastCellClicked);
     var negsRevel = gBoard[i][j].negsRevel
     console.log(negsRevel);
     for (var i = 0; i < negsRevel.length; i++) {
@@ -362,7 +365,6 @@ function startGame(cell) {
     gTimerInterval = setInterval(renderTimer, 1000, startTime)
     placeMines(cell)
     setMinesNegsCount(gBoard)
-    console.log(gBoard);
 }
 
 function renderTimer(startTime) {
@@ -378,7 +380,6 @@ function renderTimer(startTime) {
 
 function placeMines(cell) {
     var emptyCells = getEmptyCells(gBoard, cell.i, cell.j);
-    console.log(emptyCells);
     // var idx = emptyCells.indexOf(cell)
     // console.log(idx);
     for (var k = 0; k < gMinesNum; k++) {
@@ -439,10 +440,10 @@ function expendShown(board, Cell, i, j) {
 
 
 function isVictory() {
-    console.log('flags to go ', gRemaindFlagNum);
-    console.log('shown ', gGame.shownCount);
-    var currMinesNum = gMinesNum - gGame.explodedCount
-    if (currMinesNum === gGame.markedCount && gGame.shownCount === gEmptyCellsNum) return true
+    // var currMinesNum = gMinesNum - gGame.explodedCount
+    console.log(gGame.markedCount);
+    console.log(gGame.shownCount);
+    if (gGame.markedCount + gGame.shownCount === gBoardSize**2) return true
     return false
     // var elCells = document.querySelectorAll('.cell')
     // for (var k = 0; k < elCells.length; k++) {
@@ -461,6 +462,7 @@ function endGame() {
     revelMines()
     renderMsg('lose')
     document.querySelector('.start-game').innerHTML = LOSE
+    initVars()
 }
 
 function revelMines() {
@@ -480,6 +482,7 @@ function gameDone() {
     renderMsg('win')
     document.querySelector('.start-game').innerHTML = WIN
     gGame.isOn = false
+    initVars()
 }
 
 function renderMsg(str) {

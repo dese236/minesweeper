@@ -53,7 +53,6 @@ function printMat(mat, selector) {
             }
         }
     }
-    console.log(res);
     return res
   }
   

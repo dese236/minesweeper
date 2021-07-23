@@ -8,13 +8,40 @@ body{
     overflow-y: scroll;
 }
 
+.title {
+    width: 50%;
+    height: 40px;
+	box-shadow:inset 0px 1px 12px 1px #91b8b3;
+	background-image: url(../images/title.png);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+	border-radius:5px;
+	border:1px solid #566963;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	/* padding:10px 20px; */
+	text-shadow:0px -1px 0px #2b665e;
+    position: absolute;
+    margin-bottom: 10px;
+    left: 20%;
+    top: 10px;
+    
+}
+.title img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+} 
+
 .top-screen{
     width:80%;
     height: 80px;
     display: block;
     position: absolute;
     left: 20%;
-    top : 20px;
+    top : 60px;
 }
 
 /* 
@@ -86,7 +113,7 @@ body{
     margin-top: 20px;
     position: absolute;
     left: 20%;
-    top : 90px;
+    top : 110px;
 }
 .timer{
     width: 100px;
@@ -184,6 +211,7 @@ body{
 }
 .hint:hover {
     margin: 3px;
+    cursor: pointer;
 }
 .hint1{
     top: 90px;
@@ -228,6 +256,7 @@ body{
 }
 .safe:hover {
     margin: 3px;
+    cursor: pointer;
 }
 .safe1{
     top: 90px;
@@ -271,6 +300,7 @@ body{
 
 .undo:hover {
     padding: 25px 45px;
+    cursor: pointer;
 }
 .undo.clicked{
     width: 40px;
@@ -307,6 +337,7 @@ body{
 
 .manually:hover {
     padding: 37px 37px;
+    
 }
 .manually.clicked{
     width: 40px;
@@ -327,7 +358,7 @@ table{
     height: 350px;
     background-color: #33322a;
     position: absolute;
-    top : 180px ;
+    top : 200px ;
     left: 20%;
     bottom: 300px;
     margin-bottom: 50px; 
@@ -348,7 +379,12 @@ td{
     /* background-color:  */
    background:  linear-gradient(to bottom, #b5bbb9 5%, #6e6c6c 100%);
     font-size: 18px;
-    transition: 0.5s;
+    transition: 0.4s;
+}
+td:hover{
+    background:  linear-gradient(to bottom, #dde2e0 5%, #8b8989 100%);
+    opacity: 0.6;
+    cursor: pointer;
 }
 /* .cell.clicked{
     width: 25px;
@@ -379,7 +415,7 @@ td{
 	text-shadow:0px -1px 0px #2b665e;
     position: absolute;
     right: 10%;
-    top:55%;
+    top:65%;
     visibility: hidden;
     
 }
