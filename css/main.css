@@ -83,25 +83,67 @@ body{
     top: 5%;
 } 
 
+
 .check-box{
     width: 250px;
     border-radius: 12px;
     box-shadow:inset 0px 1px 12px 1px #91b8b3;
-    background:linear-gradient(to right, #efffaa 5%, #fff678 100%);
+    background-color: rgb(255, 245, 110);
+    border:1px solid #566963;
+    /* background:linear-gradient(to bottom, #768d87 5%, #a7b5b5 100%); */
+    /* background:linear-gradient(to right, #efffaa 5%, #fff678 100%); */
     opacity: 0.85;
     font-size: 20px;
     font-family: fantasy;
+    padding:5px 10px;
     text-align: center;
     position: absolute;
     display: inline-block;
-    left: 40%;
-    left : 150px;
+    left : 18.3%;
+    top: 5%;
 }
 
 .selction{
     display: block;
     left: 150px
 }
+
+
+.undo {
+	box-shadow:inset 0px 1px 12px 1px #91b8b3;
+	background:linear-gradient(to bottom, #768d87 5%, #a7b5b5 100%);
+	background-image: url(../images/undo.png);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+	border-radius:5px;
+	border:1px solid #566963;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	padding:20px 40px;
+	text-shadow:0px -1px 0px #2b665e;
+    position: absolute;
+    right: 38%;
+    top: 5%;
+    
+}
+
+.undo:hover {
+    padding: 25px 45px;
+    cursor: pointer;
+}
+.undo.clicked{
+    width: 40px;
+    height: 40px;
+}
+
+.undo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+} 
+
 
 
 .info{
@@ -278,45 +320,10 @@ body{
     margin-bottom: 50px;   
 } */
 
-.undo {
-	box-shadow:inset 0px 1px 12px 1px #91b8b3;
-	background:linear-gradient(to bottom, #768d87 5%, #a7b5b5 100%);
-	background-image: url(../images/undo.png);
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-	border-radius:5px;
-	border:1px solid #566963;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	padding:20px 40px;
-	text-shadow:0px -1px 0px #2b665e;
-    position: absolute;
-    right: 38%;
-    top: 5%;
-    
-}
-
-.undo:hover {
-    padding: 25px 45px;
-    cursor: pointer;
-}
-.undo.clicked{
-    width: 40px;
-    height: 40px;
-}
-
-.undo img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-} 
-
 
 .manually {
-    box-shadow:inset 0px 1px 12px 1px #91b8b3;
-    background:linear-gradient(to bottom, #768d87 5%, #a7b5b5 100%);
+    /* box-shadow:inset 0px 1px 12px 1px #91b8b3;
+    background:linear-gradient(to bottom, #768d87 5%, #a7b5b5 100%); */
     background-image: url(../images/manually.png);
     background-position: center;
     background-size: contain;
@@ -385,6 +392,11 @@ td:hover{
     background:  linear-gradient(to bottom, #dde2e0 5%, #8b8989 100%);
     opacity: 0.6;
     cursor: pointer;
+}
+
+td.clicked{
+    box-shadow:inset 0px 1px 12px 1px #91b8b3;
+    background:linear-gradient(to bottom, #dde2e0 5%, #8b8989 100%);
 }
 /* .cell.clicked{
     width: 25px;
