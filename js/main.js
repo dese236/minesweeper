@@ -41,12 +41,13 @@ var gBestScore;
 var gOrderedClicks = [];
 var gIsManually = false;
 var gMinesInserted = 0;
+var gMinesLocations = [];
 var gManuallyInterval;
 var gCurrClickedCell;
 var gLives = 2;
 
 function initVars() {
-    
+
     gBoardSize = 4
     gMinesNum = 2;
     gEmptyCellsNum = gBoardSize ** 2 - gMinesNum
@@ -187,6 +188,7 @@ function preventContextMenu() {
 function cellClicked(elCell, i, j) {
     console.log(gGame.shownCount);
     if (gIsManually) {
+        if (gBoard[i][j].isMine) return
         if (gMinesInserted < gMinesNum) {
             insertMineManually(i, j)
             if (gMinesInserted === gMinesNum) {
@@ -194,7 +196,7 @@ function cellClicked(elCell, i, j) {
             }
             return
         }
-        
+
         startManaully()
         gIsManually = false
         gGame.isOn = true;
@@ -586,7 +588,7 @@ function gameDone() {
 //     debugger
 //     if (gBoardSize === 4) {
 //         var level = 'easy'
-        
+
 //     } else if (gBoardSize === 8) {
 //         var level = 'hard'
 //     } else {
@@ -632,7 +634,7 @@ function gameDone() {
 //     var elRecordsTable = document.querySelector('.records')
 //     elRecordsTable.innerHtml = strHtml
 // }
- 
+
 
 function renderMsg(str) {
     var elMsg = document.querySelector('.msg')
