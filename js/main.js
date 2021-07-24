@@ -66,6 +66,15 @@ function initVars() {
     }
 }
 function initGame() {
+    if(JSON.parse(localStorage.getItem('easy'))){
+         renderRecords(JSON.parse(localStorage.getItem('easy')),'easy')
+    }
+    if (JSON.parse(localStorage.getItem('hard'))){
+         renderRecords(JSON.parse(localStorage.getItem('hard')),'hard')
+    }
+    if (JSON.parse(localStorage.getItem('extream'))){
+         renderRecords(JSON.parse(localStorage.getItem('extream')),'extream')
+    }
     clearInterval(gTimerInterval)
     gGame = {
         isOn: false,
@@ -73,8 +82,14 @@ function initGame() {
         markedCount: 0,
         secsPassed: 0
     }
-    // localStorage.clear()   ////
-    // initVars()
+    resetPage()
+    gBoard = createboard(gBoardSize, gBoardSize)
+    renderBoard(gBoard)
+    preventContextMenu()
+    gIsFirstClick = true;
+}
+
+function resetPage(){
     document.querySelector('.start-game').innerHTML = NORMAL
     document.querySelector('.life').innerHTML = LIFE + 'x ' + gLivesNum
     document.querySelector('.flags').innerHTML = FLAG + 'x ' + gMinesNum
@@ -86,12 +101,6 @@ function initGame() {
         elHints[i].style.visibility = 'visible'
         elSafes[i].style.visibility = 'visible'
     }
-
-    gBoard = createboard(gBoardSize, gBoardSize)
-    renderBoard(gBoard)
-    preventContextMenu()
-    gIsFirstClick = true;
-
 }
 
 function setBoardSize(elCheckBox) {
@@ -129,9 +138,7 @@ function upDateVars(num) {
             gMinesNum = 30
             gLivesNum = 3
     }
-    // gEmptyCellsNum = gBoardSize ** 2 - gMinesNum
     gRemaindFlagNum = gMinesNum
-    // gLivesNum = 2;
     gLives = gLivesNum
     gOrderedClicks = [];
     gIsManually = false;
@@ -167,7 +174,7 @@ function createboard(numRows, numCols) {
 }
 
 function renderBoard(board, selector) {
-    var strHTML = '';    //<table border="0"><tbody>
+    var strHTML = '';   
     for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>';
         for (var j = 0; j < board[0].length; j++) {
@@ -179,7 +186,6 @@ function renderBoard(board, selector) {
         }
         strHTML += '</tr>'
     }
-    //strHTML += '</tbody></table>';
     var elContainer = document.querySelector('table');
     elContainer.innerHTML = strHTML;
 }
@@ -222,7 +228,7 @@ function cellClicked(elCell, i, j) {
             return
         }
         cell.isShown = true;
-        gCurrClickedCell = cell  //// for undo
+        gCurrClickedCell = cell  
         expendShown(gBoard, elCell, i, j)
         if (isVictory()) { gameDone() }
     }
@@ -407,6 +413,7 @@ function coverNegsRevel(cell) {
 
 function setManually() {
     if (gGame.isOn) return
+    initGame() 
     gIsManually = gIsManually ? false : true
     gManuallyInterval = setInterval(toggleManually, 1250)
 }
@@ -541,19 +548,10 @@ function expendShown(board, elCell, i, j) {
 }
 
 function isVictory() {
-    // var currMinesNum = gMinesNum - gGame.explodedCount
     console.log(gGame.markedCount);
     console.log(gGame.shownCount);
     if (gGame.markedCount + gGame.shownCount === gBoardSize ** 2) return true
     return false
-    // var elCells = document.querySelectorAll('.cell')
-    // for (var k = 0; k < elCells.length; k++) {
-    //     var i = elCells[k].dataset.i
-    //     var j = elCells[k].dataset.j
-    //     if (gBoard[i][j].isMine && !gBoard[i][j].isMarked) return false
-    //     if (!gBoard[i][j].isMine && !gBoard[i][j].isShown) return false
-    // var emptyCellsNum = gBoardSize ** 2 - gMinesNum
-    // console.log(emptyCellsNum);
 }
 
 
@@ -596,7 +594,6 @@ function checkRecord() {
 
     if (gBoardSize === 4) {
         var level = 'easy'
-
     } else if (gBoardSize === 8) {
         var level = 'hard'
     } else {
@@ -619,7 +616,6 @@ function checkRecord() {
 }
 
 function updateRecord(level){
-    // var playerName = prompt('you set a new record , enter your name ')
     var newRecord = [level, gGame.secsPassed]
     localStorage.setItem(level, JSON.stringify(newRecord))
     console.log(JSON.parse(localStorage.getItem(level)));
@@ -630,20 +626,17 @@ function renderRecords(newRecord ,level){
     if (level === 'easy'){
         var elRecord = document.querySelector('.easy-score')
         elRecord.innerHTML = newRecord[1]
-        // var elName = document.querySelector('.easy.name')
-        // elName.innerHTML = newRecord[2]
+
     }
     if (level === 'hard'){
         var elRecord = document.querySelector('.hard-score')
         elRecord.innerHTML = newRecord[1]
-        // var elName = document.querySelector('.hard.name')
-        // elName.innerHTML = newRecord[2]
+
     }
     if (level === 'extream'){
         var elRecord = document.querySelector('.extream-score')
         elRecord.innerHTML = newRecord[1]
-        // var elName = document.querySelector('.extream.name')
-        // elName.innerHTML = newRecord[2]
+
     }
 
 }
