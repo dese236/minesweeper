@@ -264,11 +264,18 @@ function markCell(elCell) {
     var i = +elCell.dataset.i
     var j = +elCell.dataset.j
     var cell = gBoard[i][j]
+    if (gIsFirstClick) {
+        gGame.isOn = true;
+        gIsFirstClick = false
+        startGame(gBoard[i][j])
+    }
+    if(gGame.isOn){
     if (cell.isShown) return
     var isMarked = cell.isMarked
     toggleFlag(elCell, cell, isMarked)
     gOrderedClicks.push(elCell)
     if (isVictory()) { gameDone() }
+    }
 }
 
 function toggleFlag(elCell, cell, isMarked) {
