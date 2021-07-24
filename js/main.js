@@ -80,6 +80,13 @@ function initGame() {
     document.querySelector('.flags').innerHTML = FLAG + 'x ' + gMinesNum
     document.querySelector('.timer').innerHTML = '00:00'
     document.querySelector('.msg').style.visibility = 'hidden'
+    var elHints = document.querySelectorAll('.hint')
+    var elSafes = document.querySelectorAll('.safe')
+    for (var i =0 ; i< 3 ;i++){
+        elHints[i].style.visibility = 'visible'
+        elSafes[i].style.visibility = 'visible'
+    }
+
     gBoard = createboard(gBoardSize, gBoardSize)
     renderBoard(gBoard)
     preventContextMenu()
@@ -573,12 +580,16 @@ function revelMines() {
 
 function gameDone() {
     clearInterval(gTimerInterval)
-    renderMsg('win')
-    document.querySelector('.start-game').innerHTML = WIN
-
-    checkRecord()
+    
+    if (checkRecord()){
+        renderMsg('record')
+        document.querySelector('.start-game').innerHTML = WIN
+        return
+    }
     gGame.isOn = false
     initVars()
+    renderMsg('win')
+    document.querySelector('.start-game').innerHTML = WIN
 }
 
 function checkRecord() {
@@ -598,10 +609,13 @@ function checkRecord() {
         var secsPassed = gGame.secsPassed
         if (gGame.secsPassed < +record[1]) {
             updateRecord(level)
+            return true
         }
     }else {
         updateRecord(level)
+        return true
     }
+    return false
 }
 
 function updateRecord(level){

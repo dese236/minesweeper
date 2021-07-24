@@ -493,6 +493,9 @@ td:hover {
 .msg.ready{
     background-image: url(../images/download.jfif)
 }
+.msg.record{
+    background-image: url(../images/newrecord.png);
+}
 
 .msg img {
     width: 100%;
