@@ -66,21 +66,18 @@ function initVars() {
     }
 }
 function initGame() {
-    if(JSON.parse(localStorage.getItem('easy'))){
-         renderRecords(JSON.parse(localStorage.getItem('easy')),'easy')
-    }
-    if (JSON.parse(localStorage.getItem('hard'))){
-         renderRecords(JSON.parse(localStorage.getItem('hard')),'hard')
-    }
-    if (JSON.parse(localStorage.getItem('extream'))){
-         renderRecords(JSON.parse(localStorage.getItem('extream')),'extream')
-    }
+    reRenderRecords()
     clearInterval(gTimerInterval)
     gGame = {
         isOn: false,
         shownCount: 0,
         markedCount: 0,
         secsPassed: 0
+    }
+    if (gIsManually){
+        gIsManually = false ;
+        gMinesInserted=0 ;
+
     }
     resetPage()
     gBoard = createboard(gBoardSize, gBoardSize)
@@ -89,7 +86,9 @@ function initGame() {
     gIsFirstClick = true;
 }
 
-function resetPage(){
+function resetPage() {
+    clearInterval(gManuallyInterval)
+    document.querySelector('.manually').classList.remove('counter')
     document.querySelector('.start-game').innerHTML = NORMAL
     document.querySelector('.life').innerHTML = LIFE + 'x ' + gLivesNum
     document.querySelector('.flags').innerHTML = FLAG + 'x ' + gMinesNum
@@ -97,9 +96,21 @@ function resetPage(){
     document.querySelector('.msg').style.visibility = 'hidden'
     var elHints = document.querySelectorAll('.hint')
     var elSafes = document.querySelectorAll('.safe')
-    for (var i =0 ; i< 3 ;i++){
+    for (var i = 0; i < 3; i++) {
         elHints[i].style.visibility = 'visible'
         elSafes[i].style.visibility = 'visible'
+    }
+}
+
+function reRenderRecords() {
+    if (JSON.parse(localStorage.getItem('easy'))) {
+        renderRecords(JSON.parse(localStorage.getItem('easy')), 'easy')
+    }
+    if (JSON.parse(localStorage.getItem('hard'))) {
+        renderRecords(JSON.parse(localStorage.getItem('hard')), 'hard')
+    }
+    if (JSON.parse(localStorage.getItem('extream'))) {
+        renderRecords(JSON.parse(localStorage.getItem('extream')), 'extream')
     }
 }
 
@@ -174,7 +185,7 @@ function createboard(numRows, numCols) {
 }
 
 function renderBoard(board, selector) {
-    var strHTML = '';   
+    var strHTML = '';
     for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>';
         for (var j = 0; j < board[0].length; j++) {
@@ -197,7 +208,6 @@ function preventContextMenu() {
 }
 
 function cellClicked(elCell, i, j) {
-    console.log(gGame.shownCount);
     if (gIsManually) {
         if (gBoard[i][j].isMine) return
         if (gMinesInserted < gMinesNum) {
@@ -207,6 +217,8 @@ function cellClicked(elCell, i, j) {
             }
             return
         }
+        var elManually = document.querySelector('.manually')
+        elManually.classList.remove('counter')
         startManaully()
         gIsManually = false
         gGame.isOn = true;
@@ -228,7 +240,7 @@ function cellClicked(elCell, i, j) {
             return
         }
         cell.isShown = true;
-        gCurrClickedCell = cell  
+        gCurrClickedCell = cell
         expendShown(gBoard, elCell, i, j)
         if (isVictory()) { gameDone() }
     }
@@ -269,12 +281,12 @@ function markCell(elCell) {
         gIsFirstClick = false
         startGame(gBoard[i][j])
     }
-    if(gGame.isOn){
-    if (cell.isShown) return
-    var isMarked = cell.isMarked
-    toggleFlag(elCell, cell, isMarked)
-    gOrderedClicks.push(elCell)
-    if (isVictory()) { gameDone() }
+    if (gGame.isOn) {
+        if (cell.isShown) return
+        var isMarked = cell.isMarked
+        toggleFlag(elCell, cell, isMarked)
+        gOrderedClicks.push(elCell)
+        if (isVictory()) { gameDone() }
     }
 }
 
@@ -420,25 +432,14 @@ function coverNegsRevel(cell) {
 
 function setManually() {
     if (gGame.isOn) return
-    initGame() 
+    initGame()
     gIsManually = gIsManually ? false : true
     gManuallyInterval = setInterval(toggleManually, 1250)
 }
 
 function toggleManually() {
     var elManually = document.querySelector('.manually')
-    var isClicked = elManually.classList.contains('.counter')
-    console.log(isClicked);
     elManually.classList.toggle('counter')
-    isClicked = elManually.classList.contains('.counter')
-    console.log(isClicked);
-
-    if (elManually.classList.contains('.counter')) {
-        elManually.innerHTML = `${gMinesNum - gMinesInserted}`
-        return
-    }
-    // elManually.innerHTML = EMPTY
-
 }
 
 function startManaully() {
@@ -526,7 +527,6 @@ function expendShown(board, elCell, i, j) {
     var currCell = board[i][j]
     var cellNegs = getNegs(currCell)
     gCurrClickedCell.negsRevel.push(currCell)
-    console.log(gCurrClickedCell.negsRevel);
     elCell.innerHTML = `${currCell.minesAroundCount}`;
     currCell.isShown = true;
     elCell.classList.toggle('clicked')
@@ -535,7 +535,7 @@ function expendShown(board, elCell, i, j) {
         var i = currCell.i // to delete
         var j = currCell.j //todelet
         var text = elCell.innerHTML // to delete
-        console.log('i ' + i + ' j ' + j + 'innertext ' + text);
+
         return
     }
     for (var k = 0; k < cellNegs.length; k++) {
@@ -555,8 +555,6 @@ function expendShown(board, elCell, i, j) {
 }
 
 function isVictory() {
-    console.log(gGame.markedCount);
-    console.log(gGame.shownCount);
     if (gGame.markedCount + gGame.shownCount === gBoardSize ** 2) return true
     return false
 }
@@ -585,8 +583,8 @@ function revelMines() {
 
 function gameDone() {
     clearInterval(gTimerInterval)
-    
-    if (checkRecord()){
+
+    if (checkRecord()) {
         renderMsg('record')
         document.querySelector('.start-game').innerHTML = WIN
         return
@@ -615,32 +613,32 @@ function checkRecord() {
             updateRecord(level)
             return true
         }
-    }else {
+    } else {
         updateRecord(level)
         return true
     }
     return false
 }
 
-function updateRecord(level){
+function updateRecord(level) {
     var newRecord = [level, gGame.secsPassed]
     localStorage.setItem(level, JSON.stringify(newRecord))
     console.log(JSON.parse(localStorage.getItem(level)));
-    console.log(newRecord , level);
-    renderRecords(newRecord ,level)
+    console.log(newRecord, level);
+    renderRecords(newRecord, level)
 }
-function renderRecords(newRecord ,level){
-    if (level === 'easy'){
+function renderRecords(newRecord, level) {
+    if (level === 'easy') {
         var elRecord = document.querySelector('.easy-score')
         elRecord.innerHTML = newRecord[1]
 
     }
-    if (level === 'hard'){
+    if (level === 'hard') {
         var elRecord = document.querySelector('.hard-score')
         elRecord.innerHTML = newRecord[1]
 
     }
-    if (level === 'extream'){
+    if (level === 'extream') {
         var elRecord = document.querySelector('.extream-score')
         elRecord.innerHTML = newRecord[1]
 
