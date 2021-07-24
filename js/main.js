@@ -41,7 +41,6 @@ var gBestScore;
 var gOrderedClicks = [];
 var gIsManually = false;
 var gMinesInserted = 0;
-var gMinesLocations = [];
 var gManuallyInterval;
 var gCurrClickedCell;
 var gLives = 2;
@@ -67,7 +66,6 @@ function initVars() {
     }
 }
 function initGame() {
-    gGame.isOn = false
     clearInterval(gTimerInterval)
     gGame = {
         isOn: false,
@@ -75,7 +73,7 @@ function initGame() {
         markedCount: 0,
         secsPassed: 0
     }
-    localStorage.clear()   ////
+    // localStorage.clear()   ////
     // initVars()
     document.querySelector('.start-game').innerHTML = NORMAL
     document.querySelector('.life').innerHTML = LIFE + 'x ' + gLivesNum
@@ -196,7 +194,6 @@ function cellClicked(elCell, i, j) {
             }
             return
         }
-
         startManaully()
         gIsManually = false
         gGame.isOn = true;
@@ -584,56 +581,58 @@ function gameDone() {
     initVars()
 }
 
-// function checkRecord() {
-//     debugger
-//     if (gBoardSize === 4) {
-//         var level = 'easy'
+function checkRecord() {
 
-//     } else if (gBoardSize === 8) {
-//         var level = 'hard'
-//     } else {
-//         var level = 'extream'
-//     }
-//     var record = JSON.parse(localStorage.getItem(level))
-//     console.log(record);
-//     debugger
-//     if (record) {
-//         var secsPassed = gGame.secsPassed
-//         if (gGame.secsPassed < +record[1]) {
-//             updateRecord(level)
-//         }
-//     }else {
-//         updateRecord(level)
-//     }
-// }
+    if (gBoardSize === 4) {
+        var level = 'easy'
 
-// function updateRecord(level){
-//     var playerName = prompt('you set a new record , enter your name ')
-//     var newRecord = [level, gGame.secsPassed, playerName]
-//     localStorage.setItem(level, JSON.stringify(newRecord))
-//     console.log(JSON.parse(localStorage.getItem(level)));
-//     console.log(newRecord , level);
-//     renderRecords(newRecord ,level)
-// }
-// function renderRecords(){
-//     var strHtml = '<tbody class="rec-body"> <tr>LEVEL</tr> <tr>SCORE</tr> <tr>NAME</tr> '
-//     var records = [
-//         [localStorage.getItem('easy')],
-//         [localStorage.getItem('hard')],
-//         [localStorage.getItem('extream')],
-//     ]
-//     for (var i=0 ; i< records.length ; i++){
-//         strHtml += '<tr>'
-//         records[i] = records[i] ? records[i] : ['--' , '--' ,'--']
-//         for(var j=0 ; j< records[0].length ; j++){
-//             strHtml+= `<td class="rec-cell">${records[i][j]}</td>`
-//         }
-//         strHtml +='</tr>'
-//     }
-//     strHtml += '</tbody>'
-//     var elRecordsTable = document.querySelector('.records')
-//     elRecordsTable.innerHtml = strHtml
-// }
+    } else if (gBoardSize === 8) {
+        var level = 'hard'
+    } else {
+        var level = 'extream'
+    }
+    var record = JSON.parse(localStorage.getItem(level))
+    console.log(record);
+
+    if (record) {
+        var secsPassed = gGame.secsPassed
+        if (gGame.secsPassed < +record[1]) {
+            updateRecord(level)
+        }
+    }else {
+        updateRecord(level)
+    }
+}
+
+function updateRecord(level){
+    // var playerName = prompt('you set a new record , enter your name ')
+    var newRecord = [level, gGame.secsPassed]
+    localStorage.setItem(level, JSON.stringify(newRecord))
+    console.log(JSON.parse(localStorage.getItem(level)));
+    console.log(newRecord , level);
+    renderRecords(newRecord ,level)
+}
+function renderRecords(newRecord ,level){
+    if (level === 'easy'){
+        var elRecord = document.querySelector('.easy-score')
+        elRecord.innerHTML = newRecord[1]
+        // var elName = document.querySelector('.easy.name')
+        // elName.innerHTML = newRecord[2]
+    }
+    if (level === 'hard'){
+        var elRecord = document.querySelector('.hard-score')
+        elRecord.innerHTML = newRecord[1]
+        // var elName = document.querySelector('.hard.name')
+        // elName.innerHTML = newRecord[2]
+    }
+    if (level === 'extream'){
+        var elRecord = document.querySelector('.extream-score')
+        elRecord.innerHTML = newRecord[1]
+        // var elName = document.querySelector('.extream.name')
+        // elName.innerHTML = newRecord[2]
+    }
+
+}
 
 
 function renderMsg(str) {
