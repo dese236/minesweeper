@@ -66,7 +66,6 @@ function initVars() {
     }
 }
 function initGame() {
-    localStorage.clear()
     reRenderRecords()
     clearInterval(gTimerInterval)
     gGame = {
